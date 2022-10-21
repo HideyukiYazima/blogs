@@ -1,70 +1,69 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy ]
-
-  # GET /articles or /articles.json
+  # 記事の一覧表示
   def index
-    @articles = Article.all
+      @articles = Article.all
   end
 
-  # GET /articles/1 or /articles/1.json
+  # 記事の表示
   def show
-  end
-
-  # GET /articles/new
-  def new
-    @article = Article.new
-  end
-
-  # GET /articles/1/edit
-  def edit
-  end
-
-  # POST /articles or /articles.json
-  def create
-    @article = Article.new(article_params)
-
-    respond_to do |format|
-      if @article.save
-        format.html { redirect_to article_url(@article), notice: "Article was successfully created." }
-        format.json { render :show, status: :created, location: @article }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /articles/1 or /articles/1.json
-  def update
-    respond_to do |format|
-      if @article.update(article_params)
-        format.html { redirect_to article_url(@article), notice: "Article was successfully updated." }
-        format.json { render :show, status: :ok, location: @article }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /articles/1 or /articles/1.json
-  def destroy
-    @article.destroy
-
-    respond_to do |format|
-      format.html { redirect_to articles_url, notice: "Article was successfully destroyed." }
-      format.json { head :no_content }
-    end
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_article
       @article = Article.find(params[:id])
-    end
+  end
 
-    # Only allow a list of trusted parameters through.
-    def article_params
-      params.require(:article).permit(:content)
-    end
+  # 記事の作成
+  def new
+      @article = Article.new
+  end
+
+  # 記事の登録
+  def create
+      # articleモデルの属性の初期化
+      @article = Article.new(article_params)
+
+      # DBに登録できた場合
+      if @article.save
+          # 記事ページに遷移する
+          redirect_to @article
+      # DBに登録できなかった場合
+      else
+          # 作成ページに遷移する
+          render 'new'
+      end
+  end
+
+  # 記事の編集
+  def edit
+      @article = Article.find(params[:id])
+  end
+
+  # 記事の更新
+  def update
+      @article = Article.find(params[:id])
+
+      # DBに登録できた場合
+      if @article.update(article_params)
+          # 記事ページに遷移する
+          redirect_to @article
+      # DBに登録できなかった場合
+      else
+          # 編集ページに遷移する
+          render 'edit'
+      end
+  end
+
+  # 記事の削除
+  def destroy
+      @article = Article.find(params[:id])
+
+      # 記事の削除
+      @article.destroy
+     
+      # TOPページに遷移する
+      redirect_to articles_path
+  end
+
+  # コントローラパラメータの定義
+  private
+  def article_params
+      params.require(:article).permit(:title, :text)
+  end
 end
