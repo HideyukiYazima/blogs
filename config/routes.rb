@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   get "articles/:id(.:format)" => "articles#show"
   post "articles/create(.:format)" => "articles#create"
   get "articles/:id/edit(.:format)" => "articles#edit"
+  post "articles/:id/update(.:format)" => "articles#update"
 
 end
